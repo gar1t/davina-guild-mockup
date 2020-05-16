@@ -1,0 +1,15 @@
+imputer-simple:
+  main: imputer
+  flags-import: all
+
+imputer-all:
+  steps:
+    - run: imputer-simple
+      flags:
+        percent-missing:
+          - 0.33
+          - 0.66
+        missingness-mechanism:
+          - MCAR
+          - MAR
+          - MNAR
