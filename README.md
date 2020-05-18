@@ -34,12 +34,12 @@ flags from the applicable modules.
 To generate all imputers (according to `imputer-all` - see
 [guild.yml](guild.yml) for details), run:
 
-    $ guild run imputer-all
+    $ guild run all-imputers
 
 Press `Enter` to start the operation.
 
-Guild runs `imputer-simple` for each of the specified flag
-combinations defined in `imputer-all`.
+Guild runs `imputer` for each of the specified flag combinations
+defined in `all-imputers`.
 
 Review the generated runs:
 
