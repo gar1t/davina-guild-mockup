@@ -1,15 +1,64 @@
-imputer-simple:
-  main: imputer
-  flags-import: all
+- config: common-grid-search-flags
+  # Example of defining shared search ranges - used by
+  # all-imputers-future.
+  flags:
+    percent-missing:
+      - 0.33
+      - 0.66
+    missingness-mechanism:
+      - MCAR
+      - MAR
+      - MNAR
 
-imputer-all:
-  steps:
-    - run: imputer-simple
+- operations:
+    imputer:
+      description: Train an imputer
+      main: imputer ${method}
+      flags-import: all
       flags:
-        percent-missing:
-          - 0.33
-          - 0.66
-        missingness-mechanism:
-          - MCAR
-          - MAR
-          - MNAR
+        method:
+          required: yes
+          arg-skip: yes
+          choices: [knn, simple]
+        knn-only-flag:
+          null-label: unspecified
+
+    all-imputers:
+      description: Train all imputers
+      steps:
+        - run: imputer
+          flags:
+            method: simple
+            percent-missing:
+              - 0.33
+              - 0.66
+            missingness-mechanism:
+              - MCAR
+              - MAR
+              - MNAR
+        - run: imputer
+          flags:
+            method: knn
+            percent-missing:
+              - 0.33
+              - 0.66
+            missingness-mechanism:
+              - MCAR
+              - MAR
+              - MNAR
+            knn-only-flag: [1, 2, 3]
+
+    all-imputers-future:
+      # This is what all-imputers will look like when steps support
+      # $include for flags.
+      description: Train all imputers (futuristic example for illustration only)
+      steps:
+        - run: imputer
+          flags:
+            method: simple
+            $include: common-grid-search-flags
+        - run: imputer
+          flags:
+            method: knn
+            $include: common-grid-search-flags
+            knn-only-flag: [1, 2, 3]
